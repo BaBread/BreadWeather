@@ -11,7 +11,7 @@
     border: 1px solid black;
 }
 
-.spacebetween{
+.spacebetween {
     justify-content: space-around;
 }
 
@@ -38,26 +38,28 @@
 
 .col3 {
     width: 18%;
-    
+
 }
 
 
 /* make body full page size depending on viewport */
-body { min-height: 100vh; }
+body {
+    min-height: 100vh;
+}
 
 /* style the header */
 header {
     text-align: center;
     padding-top: 5px;
     padding-bottom: 10px;
-    background-color: rgb(75,105,177);
-    background-image: linear-gradient(90deg, rgba(75,105,177,1) 13%, rgba(35,77,167,1) 42%, rgba(1,1,105,1) 80%);
+    background-color: rgb(75, 105, 177);
+    background-image: linear-gradient(90deg, rgba(75, 105, 177, 1) 13%, rgba(35, 77, 167, 1) 42%, rgba(1, 1, 105, 1) 80%);
 }
 
 
 /* style the heading */
 .heading {
-    color:white;
+    color: rgb(218, 210, 210);
     font-size: 4rem;
     font-weight: bold;
 }
@@ -68,6 +70,7 @@ header {
     font-size: 3.25rem;
     margin: 2rem auto;
 }
+
 /* style the h2 */
 h2 {
     font-size: 3rem;
@@ -92,7 +95,7 @@ h2 {
 /* style the search button */
 #search-btn {
     margin-bottom: 2rem;
-    background-color: #6699ff;
+    background-color: #6687ff;
     color: white;
 }
 
@@ -110,7 +113,7 @@ h2 {
 
 /* create the line break in search area */
 hr {
-    border-top: .2rem solid rgba(0,0,0, 1);
+    border-top: .2rem solid rgba(0, 0, 0, 1);
 }
 
 /* style current weather container */
@@ -170,7 +173,7 @@ h3 {
 
 /* style the .card-body */
 .card-body {
-    background-color:#00334d;
+    background-color: #00334d;
     height: 20rem;
     padding-left: 4%;
     padding-top: 4%;
@@ -194,13 +197,15 @@ p {
 
 /* // Extra large devices (large desktops, 1200px and up) */
 @media (max-width: 1144px) {
-    
+
     .col1 {
         width: 100%;
         text-align: center;
     }
 
-    #city-search, hr, .btn {
+    #city-search,
+    hr,
+    .btn {
         width: 30rem;
         margin: 0 auto;
         margin-bottom: 2rem;
@@ -282,9 +287,3 @@ p {
     }
 
 }
-
-
-
-
-
-
