@@ -1,6 +1,5 @@
-
-
-let openWeatherApiKey = '877e2764405002039ea1afb5f87a8098';
+let myApiKey = '206b45aa67675777abb26bef2259556a';
+let borrowedAPIKey = '1b18ce13c84e21faafb19c931bb29331';
 let openWeatherCoordinatesUrl = 'https://api.openweathermap.org/data/2.5/weather?q=';
 let oneCallUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat='
 let userFormEL = $('#city-search');
@@ -11,6 +10,11 @@ let searchHistoryEl = $('#search-history');
 let currentDay = moment().format('M/DD/YYYY');
 const weatherIconUrl = 'http://openweathermap.org/img/wn/';
 let searchHistoryArray = loadSearchHistory();
+let currentCity = $("#current-city");
+let currentTemp = $("#current-temp");
+let currentHumidity = $("#current-humidity");
+let currentWindSpeed = $("#current-wind-speed");
+let UVindex = $("#uv-index");
 
 function titleCase(string) {
     const words = string.split(' ');
@@ -67,181 +71,86 @@ function searchHistory(city) {
     searchHistoryEl.append(searchHistoryBtn);
 }
 
-function getWeather(city) {
+function getWeather(cityName) {
 
-    let apiCoordinatesUrl = openWeatherCoordinatesUrl + city + '&appid=' + openWeatherApiKey;
+    let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${borrowedAPIKey}`
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        console.log(response);
+        currentCity.text(response.name);
+        currentCity.append("<small class='text-muted' id='current-date'>");
+        $("#current-date").text("(" + currentDay + ")");
+        currentCity.append("<img src='https://openweathermap.org/img/w/" + response.weather[0].icon + ".png' alt='" + response.weather[0].main + "' />" )
+        currentTemp.text(response.main.temp);
+        currentTemp.append("&deg;F");
+        currentHumidity.text(response.main.humidity + "%");
+        currentWindSpeed.text(response.wind.speed + "MPH");
 
-    fetch(apiCoordinatesUrl)
-        .then(function (coordinateResponse) {
-            if (coordinateResponse.ok) {
-                coordinateResponse.json().then(function (data) {
-                    let cityLatitude = data.coord.lat;
-                    let cityLongitude = data.coord.lon;
-               
-                    let apiOneCallUrl = oneCallUrl + cityLatitude + '&lon=' + cityLongitude + '&appid=' + openWeatherApiKey + '&units=imperial';
+        let lat = response.coord.lat;
+        let lon = response.coord.lon;
+        
 
-                    fetch(apiOneCallUrl)
-                        .then(function (weatherResponse) {
-                            if (weatherResponse.ok) {
-                                weatherResponse.json().then(function (weatherData) {
-
-                                 
-                                    let currentWeatherEl = $('<div>')
-                                        .attr({
-                                            id: 'current-weather'
-                                        })
-
-                                
-                                    let weatherIcon = weatherData.current.weather[0].icon;
-                                    let cityCurrentWeatherIcon = weatherIconUrl + weatherIcon + '.png';
-
-                           
-                                    let currentWeatherHeadingEl = $('<h2>')
-                                        .text(city + ' (' + currentDay + ')');
-                                
-                                    let iconImgEl = $('<img>')
-                                        .attr({
-                                            id: 'current-weather-icon',
-                                            src: cityCurrentWeatherIcon,
-                                            alt: 'Weather Icon'
-                                        })
-                              
-                                    let currWeatherListEl = $('<ul>')
-
-                                    let currWeatherDetails = ['Temp: ' + weatherData.current.temp + ' °F', 'Wind: ' + weatherData.current.wind_speed + ' MPH', 'Humidity: ' + weatherData.current.humidity + '%', 'UV Index: ' + weatherData.current.uvi]
-
-                                    for (let i = 0; i < currWeatherDetails.length; i++) {
-                                       
-                                        if (currWeatherDetails[i] === 'UV Index: ' + weatherData.current.uvi) {
-
-                                            let currWeatherListItem = $('<li>')
-                                                .text('UV Index: ')
-
-                                            currWeatherListEl.append(currWeatherListItem);
-
-                                            let uviItem = $('<span>')
-                                                .text(weatherData.current.uvi);
-
-                                            if (uviItem.text() <= 2) {
-                                                uviItem.addClass('favorable');
-                                            } else if (uviItem.text() > 2 && uviItem.text() <= 7) {
-                                                uviItem.addClass('moderate');
-                                            } else {
-                                                uviItem.addClass('severe');
-                                            }
-
-                                            currWeatherListItem.append(uviItem);
-
-                                            
-                                        } else {
-                                            let currWeatherListItem = $('<li>')
-                                                .text(currWeatherDetails[i])
-                                           
-                                            currWeatherListEl.append(currWeatherListItem);
-                                        }
-
-                                    }
-
-                                    
-                                    $('#five-day').before(currentWeatherEl);
-                                    
-                                    currentWeatherEl.append(currentWeatherHeadingEl);
-                                  
-                                    currentWeatherHeadingEl.append(iconImgEl);
-                                  
-                                    currentWeatherEl.append(currWeatherListEl);
-
-                                   
-                                    let fiveDayHeaderEl = $('<h2>')
-                                        .text('5-Day Forecast:')
-                                        .attr({
-                                            id: 'five-day-header'
-                                        })
-
-                                  
-                                    $('#current-weather').after(fiveDayHeaderEl)
-
-                                    
-
-                                    let fiveDayArray = [];
-
-                                    for (let i = 0; i < 5; i++) {
-                                        let forecastDate = moment().add(i + 1, 'days').format('M/DD/YYYY');
-
-                                        fiveDayArray.push(forecastDate);
-                                    }
-
-                                
-                                    for (let i = 0; i < fiveDayArray.length; i++) {
-                                       
-                                        let cardDivEl = $('<div>')
-                                            .addClass('col3');
-
-                                        
-                                        let cardBodyDivEl = $('<div>')
-                                            .addClass('card-body');
-
-                                     
-                                        let cardTitleEl = $('<h3>')
-                                            .addClass('card-title')
-                                            .text(fiveDayArray[i]);
-
-                                       
-                                        let forecastIcon = weatherData.daily[i].weather[0].icon;
-
-                                        let forecastIconEl = $('<img>')
-                                            .attr({
-                                                src: weatherIconUrl + forecastIcon + '.png',
-                                                alt: 'Weather Icon'
-                                            });
-
-                                      
-                                        let currWeatherDetails = ['Temp: ' + weatherData.current.temp + ' °F', 'Wind: ' + weatherData.current.wind_speed + ' MPH', 'Humidity: ' + weatherData.current.humidity + '%', 'UV Index: ' + weatherData.current.uvi]
-                                       
-                                        let tempEL = $('<p>')
-                                            .addClass('card-text')
-                                            .text('Temp: ' + weatherData.daily[i].temp.max)
-                                       
-                                        let windEL = $('<p>')
-                                            .addClass('card-text')
-                                            .text('Wind: ' + weatherData.daily[i].wind_speed + ' MPH')
-                                    
-                                        let humidityEL = $('<p>')
-                                            .addClass('card-text')
-                                            .text('Humidity: ' + weatherData.daily[i].humidity + '%')
-
-
-                                       
-                                        fiveDayEl.append(cardDivEl);
-                                    
-                                        cardDivEl.append(cardBodyDivEl);
-                                        
-                                        cardBodyDivEl.append(cardTitleEl);
-                                      
-                                        cardBodyDivEl.append(forecastIconEl);
-                                      
-                                        cardBodyDivEl.append(tempEL);
-                                        
-                                        cardBodyDivEl.append(windEL);
-                                        
-                                        cardBodyDivEl.append(humidityEL);
-                                    }
-
-                                
-                                })
-                            }
-                        })
-                });
-                
-            } else {
-                alert('Error: Open Weather could not find city')
-            }
-        })
-      
-        .catch(function (error) {
-            alert('Unable to connect to Open Weather');
+        let UVurl = "https://api.openweathermap.org/data/2.5/uvi?&lat=" + lat + "&lon=" + lon + "&appid=" + borrowedAPIKey;
+        $.ajax({
+            url: UVurl,
+            method: "GET"
+        }).then(function(response){
+            UVindex.text(response.value);
         });
-}
+
+        let countryCode = response.sys.country;
+        let forecastURL = "https://api.openweathermap.org/data/2.5/forecast?&units=imperial&appid=" + borrowedAPIKey + "&lat=" + lat +  "&lon=" + lon;
+        
+        $.ajax({
+            url: forecastURL,
+            method: "GET"
+        }).then(function(response){
+            console.log(response);
+            $('#five-day-forecast').empty();
+            for (let i = 1; i < response.list.length; i+=8) {
+
+                let forecastDateString = moment(response.list[i].dt_txt).format("L");
+
+                let forecastCol = $("<div class='col-12 col-md-6 col-lg forecast-day mb-3'>");
+                let forecastCard = $("<div class='card'>");
+                let forecastCardBody = $("<div class='card-body'>");
+                let forecastDate = $("<h5 class='card-title'>");
+                let forecastIcon = $("<img>");
+                let forecastTemp = $("<p class='card-text mb-0'>");
+                let forecastHumidity = $("<p class='card-text mb-0'>");
+
+
+                $('#five-day-forecast').append(forecastCol);
+                forecastCol.append(forecastCard);
+                forecastCard.append(forecastCardBody);
+
+                forecastCardBody.append(forecastDate);
+                forecastCardBody.append(forecastIcon);
+                forecastCardBody.append(forecastTemp);
+                forecastCardBody.append(forecastHumidity);
+                
+                forecastIcon.attr("src", "https://openweathermap.org/img/w/" + response.list[i].weather[0].icon + ".png");
+                forecastIcon.attr("alt", response.list[i].weather[0].main)
+                forecastDate.text(forecastDateString);
+                forecastTemp.text(response.list[i].main.temp);
+                forecastTemp.prepend("Temp: ");
+                forecastTemp.append("&deg;F");
+                forecastHumidity.text(response.list[i].main.humidity);
+                forecastHumidity.prepend("Humidity: ");
+                forecastHumidity.append("%");
+                
+
+
+            }
+        });
+
+    });
+
+    
+
+};
 
  
 

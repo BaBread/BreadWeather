@@ -23,7 +23,7 @@ Open the index.html with live server in browser
 ![Weather Dashboard Homepage](assets/images/weather_homepage.png)
 
 ## Contribution
-Big thank you to VitaliyZhark for guidance via his repo.
+Big thank you to VitaliyZhark where I based my repo off of.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more details.

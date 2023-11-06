@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href='./assets/css/style.css'>
     <title>Weather Dashboard</title>
 </head>
@@ -32,10 +35,39 @@
                 </div>
             </div>
             <!-- container that holds the current weather and 5 day forecast -->
-            <div class="col2">
-                <div id='five-day' class='row spacebetween'></div>
+            <div id="weather-content" class="col-12 col-md-9 hide">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="city-info border rounded my-3 px-3 py-3">
+                            <h2 id="current-city">City Information <small class="text-muted" id="current-date"></small>
+                            </h2>
+
+                            <p class="mb-0">Temperature: <span id="current-temp"></span></p>
+                            <p class="mb-0">Humidity: <span id="current-humidity"></span></p>
+                            <p class="mb-0">Wind Speed: <span id="current-wind-speed"></span></p>
+                            <p>UV index: <span id="uv-index"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h3>5-Day Forecast</h3>
+
+                    </div>
+                </div>
+                <div id="five-day-forecast" class="row">
+                    <div class="col-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Date</h5>
+                                <i class="fa fa-sun"></i>
+                                <p class="card-text">Temp: </p>
+                                <p class="card-text">Humidity: </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
     </main>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
